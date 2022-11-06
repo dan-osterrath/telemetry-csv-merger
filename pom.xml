@@ -16,6 +16,8 @@
 
 		<opencsv.version>5.7.1</opencsv.version>
 		<commons-cli.version>1.5.0</commons-cli.version>
+
+		<project.scm.id>github</project.scm.id>
 	</properties>
 
 	<dependencies>
@@ -60,5 +62,16 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/dan-osterrath/telemetry-csv-merger.git</developerConnection>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub</name>
+			<url>https://maven.pkg.github.com/dan-osterrath/telemetry-csv-merger</url>
+		</repository>
+	</distributionManagement>
 
 </project>
