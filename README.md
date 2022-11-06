@@ -10,6 +10,8 @@ This tool is tested with videos from a GoPro Hero 7 Black. If you can not use Go
 see [this link](https://community.gopro.com/s/question/0D53b00008BtEN8CAN/hero-7-black-telemetry-not-showing-in-dashware-191)
 .
 
+![Maven build](https://github.com/dan-osterrath/telemetry-csv-merger/actions/workflows/maven.yml/badge.svg)
+
 ## Usage
 
 Compile the project to a single jar file:
