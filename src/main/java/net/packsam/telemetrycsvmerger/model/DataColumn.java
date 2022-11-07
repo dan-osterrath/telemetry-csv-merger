@@ -27,7 +27,7 @@ public record DataColumn(String name, Type type, AggregationType aggregationType
 	}
 
 	public enum Type {
-		NUMERIC, DATETIME, GLOBALTIME
+		NUMERIC, DATETIME
 	}
 
 	public enum AggregationType {

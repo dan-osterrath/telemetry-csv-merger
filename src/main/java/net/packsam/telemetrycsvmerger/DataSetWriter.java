@@ -18,10 +18,10 @@ import static com.opencsv.ICSVWriter.NO_QUOTE_CHARACTER;
 import static net.packsam.telemetrycsvmerger.DataSetReader.DATETIME_FORMAT;
 
 public class DataSetWriter {
-	private final BigDecimal globalTimeFactor;
+	private final Map<String, BigDecimal> factors;
 
-	public DataSetWriter(BigDecimal globalTimeFactor) {
-		this.globalTimeFactor = globalTimeFactor;
+	public DataSetWriter(Map<String, BigDecimal> factors) {
+		this.factors = factors;
 	}
 
 	public void write(DataSet dataSet, File file) {
@@ -43,14 +43,23 @@ public class DataSetWriter {
 	private String[] writeData(Map<String, Comparable<? extends Comparable<?>>> dataRow, DataColumn[] columns) {
 		return Stream.of(columns)
 				.map(column -> {
-					var cellValue = dataRow.get(column.name());
+					String columnName = column.name();
+					var cellValue = dataRow.get(columnName);
 					return switch (column.type()) {
-						case GLOBALTIME -> ((BigDecimal) cellValue).multiply(globalTimeFactor).toPlainString();
-						case NUMERIC -> ((BigDecimal) cellValue).toPlainString();
+						case NUMERIC -> applyFactor((BigDecimal) cellValue, columnName).toPlainString();
 						case DATETIME -> ((LocalDateTime) cellValue).format(DATETIME_FORMAT);
 					};
 				})
 				.toArray(String[]::new);
+	}
+
+	private BigDecimal applyFactor(BigDecimal value, String columnName) {
+		BigDecimal factor = factors.get(columnName);
+		if (factor == null) {
+			return value;
+		}
+
+		return value.multiply(factor);
 	}
 
 	private String[] writeHeader(DataColumn[] columns) {

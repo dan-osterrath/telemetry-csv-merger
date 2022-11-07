@@ -12,17 +12,22 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Collections.emptyMap;
 
 public class TelemetryMerger {
 
-	public static final Option OPTION_GTF = Option.builder()
-			.option("gtf")
-			.longOpt("global-time-factor")
-			.hasArg()
-			.argName("factor")
-			.desc("Global time factor for adjusting the global time of all data sets.")
+	public static final Option OPTION_FACTOR = Option.builder()
+			.option("f")
+			.longOpt("factor")
+			.numberOfArgs(2)
+			.valueSeparator('=')
+			.argName("field=factor")
+			.desc("Defines a factor for a field to adjust all values. Can be used multiple times for different fields.")
 			.build();
 
 	public static final Option OPTION_OUTPUT = Option.builder()
@@ -41,7 +46,7 @@ public class TelemetryMerger {
 
 	public static void main(String[] args) throws ParseException {
 		var commandLine = parseCommandLine(args);
-		var gtf = new BigDecimal(commandLine.getOptionValue(OPTION_GTF, "1.0"));
+		var factors = getFactors(commandLine);
 		var outputFile = new File(commandLine.getOptionValue(OPTION_OUTPUT, "merged.csv"));
 		var csvFiles = getArgumentsAsFiles(commandLine.getArgs());
 
@@ -50,17 +55,30 @@ public class TelemetryMerger {
 				.map(reader::parseFile)
 				.toList();
 
-		var merger = new Merger();
+		var merger = new DataSetsMerger();
 		var merged = merger.merge(dataSets);
 
-		var dataSetWriter = new DataSetWriter(gtf);
+		var dataSetWriter = new DataSetWriter(factors);
 		dataSetWriter.write(merged, outputFile);
+	}
+
+	private static Map<String, BigDecimal> getFactors(CommandLine commandLine) {
+		if (!commandLine.hasOption(OPTION_FACTOR)) {
+			return emptyMap();
+		}
+
+		var optionProperties = commandLine.getOptionProperties(OPTION_FACTOR);
+		return optionProperties.entrySet().stream()
+				.collect(Collectors.toMap(
+						entry -> entry.getKey().toString(),
+						entry -> new BigDecimal(entry.getValue().toString())
+				));
 	}
 
 	private static CommandLine parseCommandLine(String[] args) throws ParseException {
 		var argsParser = new DefaultParser();
 		var argsOptions = new Options()
-				.addOption(OPTION_GTF)
+				.addOption(OPTION_FACTOR)
 				.addOption(OPTION_OUTPUT)
 				.addOption(OPTION_HELP);
 		var commandLine = argsParser.parse(argsOptions, args);

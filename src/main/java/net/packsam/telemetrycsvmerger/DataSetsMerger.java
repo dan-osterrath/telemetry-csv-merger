@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Merger {
+public class DataSetsMerger {
 	public DataSet merge(List<DataSet> dataSets) {
 		var allColumns = dataSets.stream()
 				.map(DataSet::columns)

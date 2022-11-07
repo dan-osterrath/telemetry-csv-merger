@@ -34,15 +34,14 @@ To get a help of available options, use:
 java -jar target/telemetry-csv-merger.jar -h
 ```
 
-### Global Time Factor
+### Value Factors
 
-The global time factor is used to adjust the global time of the telemetry data. This is useful if the telemetry data is
-not in sync with the merged video. The factor is applied to the global time of the telemetry data. The default value is
-1.0.
+In some cases the telemetry data is not in sync with the merged video. To fix this you have to apply a factor to
+the `GlobalTime` column. This can be done with the command line argument `-f` or `--factor`.
 
-Example: In DashWare your merged video has a length of 37:27.500. In the Synchronization tab of DashWare you can see
-that the merged telemetry data only has a length of 36:00.950. The telemetry data compressed by 01:26.650. To stretch
-the telemetry data you have to apply a factor of `1.040051829056665` to the global time.
+Example: In DashWare your merged video has a length of 37:27.500. In the "Synchronization" tab of DashWare you can see
+that the merged telemetry data only has a length of 36:00.950. The telemetry data is compressed by 01:26.650. To stretch
+the telemetry data you have to apply a factor of `1.040051829056665` to the `GlobalTime` field.
 
 ```
 01:26.650 = 86.55s
@@ -56,7 +55,14 @@ the telemetry data you have to apply a factor of `1.040051829056665` to the glob
 To apply this factor, run:
 
 ```shell
-java -jar target/telemetry-csv-merger.jar -gtf 1.040051829056665 <path-to-csv-files> ...
+java -jar target/telemetry-csv-merger.jar -f GlobalTime=1.040051829056665 <path-to-csv-files> ...
+```
+
+You can also use the `-f` argument multiple times for other numeric fields, i.e. when your sensor data has to be
+adjusted.
+
+```shell
+java -jar target/telemetry-csv-merger.jar -f GlobalTime=1.040051829056665 -f "Speed KPH=1000" -f "Speed MPH=1000" <path-to-csv-files> ...
 ```
 
 ## Credits

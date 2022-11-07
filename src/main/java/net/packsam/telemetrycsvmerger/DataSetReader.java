@@ -53,7 +53,7 @@ public class DataSetReader {
 			var cellString = line[i];
 
 			var cellValue = switch (column.type()) {
-				case GLOBALTIME, NUMERIC -> new BigDecimal(cellString);
+				case NUMERIC -> new BigDecimal(cellString);
 				case DATETIME -> LocalDateTime.parse(cellString, DATETIME_FORMAT);
 			};
 			data.put(column.name(), cellValue);
@@ -73,9 +73,7 @@ public class DataSetReader {
 	}
 
 	private DataColumn.Type getColumnType(String columnName) {
-		if ("GlobalTime".equals(columnName)) {
-			return DataColumn.Type.GLOBALTIME;
-		} else if ("DateTime".equals(columnName)) {
+		if ("DateTime".equals(columnName)) {
 			return DataColumn.Type.DATETIME;
 		} else {
 			return DataColumn.Type.NUMERIC;
