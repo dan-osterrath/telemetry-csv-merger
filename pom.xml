@@ -4,7 +4,7 @@
 
 	<groupId>net.packsam</groupId>
 	<artifactId>telemetry-csv-merger</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -63,7 +63,7 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/dan-osterrath/telemetry-csv-merger.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>telemetry-csv-merger-1.2</tag>
   </scm>
 	<distributionManagement>
 		<repository>
